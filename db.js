@@ -56,4 +56,4 @@ const Reservation = mongoose.model('Reservation', reservationSchema)
 const Location = mongoose.model('Location', locationSchema)
 
 // Export models
-export { User, BusService, Reservation, Location }
+export { User, BusService, Reservation, Location, closeConnection }
