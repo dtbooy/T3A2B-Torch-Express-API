@@ -1,6 +1,6 @@
 import express from 'express'
-import locationRoutes from './location_routes.js'
-import reservationRoutes from './reservation_routes.js'
+import locationRoutes from './routes/location_routes.js'
+import reservationRoutes from './routes/reservation_routes.js'
 // import cors from 'cors'
 import userRoutes from './routes/user_routes.js'
 
