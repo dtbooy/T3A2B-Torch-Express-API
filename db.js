@@ -46,7 +46,6 @@ const locationSchema = new mongoose.Schema({
     name: { type: String, required: true },
     address: { type: String, required: true },
     directions: { type: String, required: true },
-    reservations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Reservation' }]
 })
 
 // Define Models
