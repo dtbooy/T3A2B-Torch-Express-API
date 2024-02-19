@@ -57,3 +57,4 @@ const Location = mongoose.model('Location', locationSchema)
 
 // Export models
 export { User, BusService, Reservation, Location, closeConnection }
+
