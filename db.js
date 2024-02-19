@@ -30,10 +30,10 @@ const userSchema = new mongoose.Schema({
 
 const busServiceSchema = new mongoose.Schema({
     eventName: [{ type: String }],
-    collectionTime: { type: Date },
-    estimatedTravelTime: { type: Date },
-    pickupLocation: { type: mongoose.Schema.Types.ObjectId, ref: 'Location' },
-    dropoffLocation: { type: mongoose.Schema.Types.ObjectId, ref: 'Location' },
+    collectionTime: { type: Date, required: true},
+    estimatedTravelTime: { type: Number, required: true },
+    pickupLocation: { type: mongoose.Schema.Types.ObjectId, ref: 'Location', required: true },
+    dropoffLocation: { type: mongoose.Schema.Types.ObjectId, ref: 'Location', required: true},
     capacity: { type: Number }
 })
 
