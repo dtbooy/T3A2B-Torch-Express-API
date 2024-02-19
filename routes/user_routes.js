@@ -57,10 +57,23 @@ userRoutes.put("/:id", async (req, res) => {
 
 
 // /users/:id – DELETE
-
+userRoutes.delete("/:id", async (req, res) => {
+    try {
+      // 
+      const deletedUser = await User.findByIdAndDelete(req.params.id);
+      // res with 204 (No content)
+      if (deletedUser) {
+        res.sendStatus(204);
+      } else {
+        res.status(404).send({ error: "Entry not found" });
+      }
+    } catch (err) {
+      res.status(500).send({ error: err.message });
+    }
+  });
+  
 
 // /users/:id/reservations - GET
-
 
 
 export default userRoutes
