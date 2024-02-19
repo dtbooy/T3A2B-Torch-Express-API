@@ -1,5 +1,5 @@
 import express from "express";
-import { User } from "../db.js";
+import { Reservation, User } from "../db.js";
 
 const userRoutes = express.Router();
 
@@ -10,7 +10,7 @@ userRoutes.get("/", async (req, res) => {
     try {
         res.status(200).send(await User.find().exec())
     } catch (err) {
-        res.status(500).send({ error: err })
+        res.status(500).send({ error: err.message })
     }
 })
 
@@ -20,7 +20,7 @@ userRoutes.post("/", async (req, res) => {
         const newUser = await User.create(req.body)
         res.status(201).send(newUser)
     } catch (err) {
-        res.status(500).send({ error: err })
+        res.status(500).send({ error: err.message })
     }
 })
 
@@ -29,7 +29,7 @@ userRoutes.get("/:id", async (req, res) => {
     res.status(200).send(
         await User.findById(req.params.id).exec()
         .catch((err) => { 
-            res.status(404).send({ error: err })
+            res.status(404).send({ error: err.message })
         })
     )
 });
@@ -74,6 +74,14 @@ userRoutes.delete("/:id", async (req, res) => {
   
 
 // /users/:id/reservations - GET
+userRoutes.get("/:id/reservations", async (req, res) => {
+  try {
+      const userData = await Reservation.find({ user: req.params.id }).populate("busService")
+      res.status(200).send(userData)
+  } catch (err) {
+      res.status(500).send({error: err.message});
+  }
+})
 
 
 export default userRoutes
