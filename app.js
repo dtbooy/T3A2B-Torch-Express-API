@@ -1,4 +1,6 @@
 import express from 'express'
+import locationRoutes from './location_routes.js'
+import reservationRoutes from './reservation_routes.js'
 // import cors from 'cors'
 import userRoutes from './routes/user_routes.js'
 
@@ -12,6 +14,10 @@ app.use(express.json())
 // Attach routers
 app.use("/users", userRoutes)
 app.get('/', (req, res) => res.send({ info: 'Torch API' }))
+
+
+app.use('/locations', locationRoutes)
+app.use('/reservations', reservationRoutes)
 
 export default app
 
