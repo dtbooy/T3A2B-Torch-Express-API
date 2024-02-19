@@ -15,6 +15,14 @@ userRoutes.get("/", async (req, res) => {
 })
 
 // /users - POST
+userRoutes.post("/", async (req, res) => {
+    try {
+        const newUser = await User.create(req.body)
+        res.status(201).send(newUser)
+    } catch (err) {
+        res.status(500).send({ error: err })
+    }
+})
 
 // /users/:id - GET
 userRoutes.get("/:id", async (req, res) => {
@@ -29,9 +37,12 @@ userRoutes.get("/:id", async (req, res) => {
 
 // /users/:id  - PUT
 
+
 // /users/:id – DELETE
 
+
 // /users/:id/reservations - GET
+
 
 
 export default userRoutes
