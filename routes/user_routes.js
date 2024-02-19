@@ -35,7 +35,25 @@ userRoutes.get("/:id", async (req, res) => {
 });
 
 
-// /users/:id  - PUT
+// /users/:id - PUT
+userRoutes.put("/:id", async (req, res) => {
+    try {
+      // findByIdAndUpdate
+      const updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true }
+      );
+      // res with newEntry, 200
+      if (updatedUser) {
+        res.send(updatedUser);
+      } else {
+        res.status(404).send({ error: "Entry not found" });
+      }
+    } catch (err) {
+      res.status(500).send({ error: err.message });
+    }
+  })
 
 
 // /users/:id – DELETE
