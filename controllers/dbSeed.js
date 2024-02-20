@@ -1,3 +1,6 @@
+import bcrypt from "bcrypt"
+const salt = 10
+
 import {
   User,
   BusService,
@@ -76,8 +79,23 @@ const users = [
     reservations: [],
   },
 ];
+
+//hash dummy data using for each
+// need to create a function to 
+const hashedUsers = []
+users.forEach(async user => {
+  const hashedPassword = bcrypt.hashSync(user.password, salt)
+  hashedUsers.push({
+    ...user,
+    password: hashedPassword
+  })
+})
+
+//wait for all users to get hashed
+await Promise.all(hashedUsers)
+
 // add users to db
-const userResponse = await User.insertMany(users);
+const userResponse = await User.insertMany(hashedUsers)
 
 
 // Services
