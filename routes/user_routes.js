@@ -1,7 +1,12 @@
 import express from "express";
-import { Reservation, User } from "../db.js";
+import { Reservation, User } from "../db.js"
+import bcrypt from "bcrypt"
 
-const userRoutes = express.Router();
+// change when in production
+// const salt = bcrypt.genSaltSync(10)
+const salt = 10
+
+const userRoutes = express.Router()
 
 
 // /users - GET
@@ -15,9 +20,25 @@ userRoutes.get("/", async (req, res) => {
 })
 
 // /users - POST
-userRoutes.post("/", async (req, res) => {
+userRoutes.post("/signup", async (req, res) => {
     try {
-        const newUser = await User.create(req.body)
+        const { email, password, name, DOB} = req.body
+        const user = await User.findOne({ email: email })
+
+        if (user) {
+          return res.status(409).json({ error: "User already exists" });
+      }
+        const hash = await bcrypt.hash(password, salt)
+
+        const newUser = await User.create({
+          name,
+          email,
+          password: hash,
+          DOB,
+          is_admin: false,
+          reservations: []
+        })
+        
         res.status(201).send(newUser)
     } catch (err) {
         res.status(500).send({ error: err.message })
