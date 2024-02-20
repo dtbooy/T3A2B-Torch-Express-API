@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {Reservation} from "../db.js";
+import {BusService, Reservation, User} from "../db.js";
 
 const router = Router()
 
@@ -29,14 +29,26 @@ router.get('/:id', async (req, res) => {
 
 // Create new Reservation
 router.post('/', async (req, res) => {
-    try{
-        const newReservation = await (Reservation.create(req.body))
-        res.status(201).send(newReservation)
+    try {
+        const newReservation = await Reservation.create(req.body);
+
+        // Update the user document with the new reservation
+        await User.findByIdAndUpdate(
+            { _id: req.body.user},
+            { $push: { reservations: newReservation._id } }
+        ).exec();
+
+        // Update the bus service document with the new reservation
+        await BusService.findByIdAndUpdate(
+            { _id: req.body.busService },
+            { $push: { reservations: newReservation._id } }
+        ).exec();
+
+        res.status(201).send(newReservation);
     } catch (err) {
-        res.status(500).send({error: err.message})
+        res.status(500).send({ error: err.message });
     }
 })
-
 
 // Delete Reservation
 router.delete('/:id', async (req, res) => {
