@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt"
 import {
   User,
   BusService,
@@ -76,6 +77,12 @@ const users = [
     reservations: [],
   },
 ];
+
+//hash dummy data using for each
+users.forEach(user => {
+  const hashedPassword = bcrypt.hashSync(user.password, 10)
+  user.password = hashedPassword
+})
 // add users to db
 const userResponse = await User.insertMany(users);
 
