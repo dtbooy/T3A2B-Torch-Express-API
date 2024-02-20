@@ -1,10 +1,11 @@
 import { Router } from "express";
 import {Location} from "../db.js";
+import { verifyAdmin } from "./auth.js";
 
 const router = Router()
 
 // Get all locations
-router.get('/', async (req, res) => {
+router.get('/', verifyAdmin, async (req, res) => {
     try {
         const all_locations = await Location.find()
         res.status(200).send(all_locations)

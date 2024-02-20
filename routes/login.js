@@ -14,8 +14,6 @@ router.post('/', async (req, res) => {
         if (!user) {
             return res.status(401).json({ error: "Invalid username"})
         }
-        console.log(password)
-        console.log(user.password)
 
         const isPasswordValid = await bcrypt.compare(password, user.password)
         if (!isPasswordValid) {
@@ -23,11 +21,10 @@ router.post('/', async (req, res) => {
         }
 
         delete user.password
-
+        //reduce expiration in deployment
         const token = jwt.sign({ userId: user._id, is_admin: user.is_admin, email: user.email }, process.env.SECRET_TOKEN, {expiresIn: '12h'})
 
         res.send({user, token})
-
 
 
     } catch (err) {
@@ -35,5 +32,7 @@ router.post('/', async (req, res) => {
         res.status(500).json({ "error": err.message })
     }
 })
+
+
 
 export default router
