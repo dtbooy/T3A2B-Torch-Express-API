@@ -13,18 +13,13 @@ app.use(cors())
 
 app.use(express.json())
 
+app.get('/', (req, res) => res.send({ info: 'Torch API' }))
+
 // Attach routers
 app.use("/users", userRoutes)
 app.use('/locations', locationRoutes)
 app.use('/reservations', reservationRoutes)
 app.use('/services', servicesRoutes)
-
-app.get('/', (req, res) => res.send({ info: 'Torch API' }))
-
-
-
-app.use('/locations', locationRoutes)
-app.use('/reservations', reservationRoutes)
 app.use('/login', loginRoutes)
 
 
