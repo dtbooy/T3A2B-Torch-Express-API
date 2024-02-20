@@ -5,22 +5,29 @@ const servicesRoutes = Router();
 
 // Search bus routes
 servicesRoutes.get("/search", async (req, res) => {
-  /* query params
+  /* query params:
     date = YYYY-MM-DD
     pickup = id
     dropoff = id
-    */
-
+  */
+  let { pickup, dropoff, date } = req.query;
+  const filters = {};
+  if (pickup) {
+    filters.pickupLocation = pickup;
+  }
+  if (dropoff) {
+    filters.dropoffLocation = dropoff;
+  }
+  filters.collectionTime = {
+    $gte: date
+      ? new Date(Date.parse(date))
+      : new Date(Date.parse("2032/07/01")),
+    $lt: date
+      ? new Date(Date.parse(date) + 86400000)
+      : new Date(Date.parse("2032/08/30")),
+  };
   try {
-    let services = await BusService.find({
-      pickupLocation: req.query.pickup,
-      dropoffLocation: req.query.dropoff,
-      // between date given 12:00Am and 12:am next day
-      collectionTime: {
-        $gte: new Date(Date.parse(req.query.date)),
-        $lt: new Date(Date.parse(req.query.date) + 86400000),
-      },
-    }).exec();
+    let services = await BusService.find(filters).exec();
 
     if (services) {
       res.send(services);
