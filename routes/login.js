@@ -24,6 +24,12 @@ router.post('/', async (req, res) => {
         //reduce expiration in deployment
         const token = jwt.sign({ userId: user._id, is_admin: user.is_admin, email: user.email }, process.env.SECRET_TOKEN, {expiresIn: '12h'})
 
+        res.cookie("token", token, {
+            httpOnly: true,
+            // secure: true,
+            //maxAge: 100000
+        })
+        
         res.send({user, token})
 
 

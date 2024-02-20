@@ -36,6 +36,7 @@ const verifyUser = async (req, res, next) => {
         if (!user) {
             return res.status(401).json({error: 'Not Valid User'})
         }
+        next()
 
     } catch (err) {
         res.status(500).json({error: err.message})
