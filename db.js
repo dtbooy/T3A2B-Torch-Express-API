@@ -34,7 +34,8 @@ const busServiceSchema = new mongoose.Schema({
     estimatedTravelTime: { type: Number, required: true },
     pickupLocation: { type: mongoose.Schema.Types.ObjectId, ref: 'Location', required: true },
     dropoffLocation: { type: mongoose.Schema.Types.ObjectId, ref: 'Location', required: true},
-    capacity: { type: Number }
+    capacity: { type: Number },
+    reservations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Reservation' }]
 })
 
 const reservationSchema = new mongoose.Schema({
