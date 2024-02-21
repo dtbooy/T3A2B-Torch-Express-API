@@ -33,7 +33,7 @@ servicesRoutes.get("/search", async (req, res) => {
 // Get all Bus Services
 servicesRoutes.get("/", async (req, res) => {
   try {
-    const allServices = await BusService.find();
+    const allServices = await BusService.find().populate("pickupLocation").populate("dropoffLocation")
     res.status(200).send(allServices);
   } catch (err) {
     res.status(500).send({ error: err.message });
