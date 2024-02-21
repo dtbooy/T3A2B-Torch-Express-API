@@ -27,9 +27,11 @@ servicesRoutes.get("/search", async (req, res) => {
       : new Date(Date.parse("2032/08/30")),
   };
   try {
-    let services = await BusService.find(filters).exec();
-
+    let services = await BusService.find(filters).lean();
+     
     if (services) {
+        // replace reservations array with reservation count (limits exposure of Reservation ids)
+      services = services.map(service=>({...service, reservations : service.reservations.length}))
       res.send(services);
     } else res.status(404).send({ error: "No Service found " });
   } catch (err) {
