@@ -5,7 +5,7 @@ import { verifyAdmin } from "./auth.js";
 const router = Router()
 
 // Get all locations
-router.get('/', verifyAdmin, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const all_locations = await Location.find()
         res.status(200).send(all_locations)
