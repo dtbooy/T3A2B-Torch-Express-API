@@ -97,12 +97,23 @@ userRoutes.delete("/:id", async (req, res) => {
 // /users/:id/reservations - GET
 userRoutes.get("/:id/reservations", async (req, res) => {
   try {
-      const userData = await Reservation.find({ user: req.params.id }).populate("busService")
-      res.status(200).send(userData)
+    const reservations = await Reservation.find({ user: req.params.id })
+      .populate("user")
+      .populate({
+        path: 'busService',
+        populate: [
+          { path: 'pickupLocation', model: 'Location' },
+          { path: 'dropoffLocation', model: 'Location' }
+        ]
+      })
+      .lean();
+
+    res.status(200).send(reservations);
   } catch (err) {
-      res.status(500).send({error: err.message});
+    console.error(err);
+    res.status(500).send({ error: err.message });
   }
-})
+});
 
 
 export default userRoutes

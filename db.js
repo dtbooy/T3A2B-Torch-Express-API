@@ -40,7 +40,7 @@ const busServiceSchema = new mongoose.Schema({
 
 const reservationSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    busService: { type: mongoose.Schema.Types.ObjectId, ref: 'BusService', required: true }
+    busService: { type: mongoose.Schema.Types.ObjectId, ref: 'BusService', required: true },
 })
 
 const locationSchema = new mongoose.Schema({
