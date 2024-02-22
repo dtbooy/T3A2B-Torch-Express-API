@@ -29,22 +29,32 @@ router.get('/:id', async (req, res) => {
 
 // Create new Reservation
 router.post('/', async (req, res) => {
-    try {
-        const newReservation = await Reservation.create(req.body);
+    // create new reservations array
+    let reservations = []
+    for (let i = 0 ; i < req.body.numberOfTickets; i++) {
+        reservations.push({
+            user: req.body.user,
+            busService: req.body.busService
+        })
+    }
 
-        // Update the user document with the new reservation
+    try {
+        const newReservations = await Reservation.insertMany(reservations);
+        //get array of ids of new reservations
+        const ids = newReservations.map(res => res._id);
+        // Update the user document with the new reservations
         await User.findByIdAndUpdate(
             { _id: req.body.user},
-            { $push: { reservations: newReservation._id } }
+            { $push: { reservations: {$each: ids }} }
         ).exec();
 
-        // Update the bus service document with the new reservation
+        // Update the bus service document with the new reservations
         await BusService.findByIdAndUpdate(
             { _id: req.body.busService },
-            { $push: { reservations: newReservation._id } }
+            { $push: { reservations: {$each: ids }} }
         ).exec();
 
-        res.status(201).send(newReservation);
+        res.status(201).send(newReservations);
     } catch (err) {
         res.status(500).send({ error: err.message });
     }
