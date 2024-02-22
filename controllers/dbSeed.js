@@ -102,7 +102,8 @@ const userResponse = await User.insertMany(hashedUsers)
 // Date range 23 July - 8 August
 const services = [
   {
-    eventName: "Tennis",
+    
+    busNumber: 1,
     collectionTime: new Date(2032, 7, 23, 7, 30),
     estimatedTravelTime: "30",
     capacity: 40,
@@ -111,7 +112,8 @@ const services = [
     reservations: [],
   },
   {
-    eventName: "Tennis",
+    
+    busNumber: 2,
     collectionTime: new Date(2032, 7, 23, 8, 30),
     estimatedTravelTime: "30",
     capacity: 40,
@@ -120,7 +122,8 @@ const services = [
     reservations: [],
   },
   {
-    eventName: "Tennis",
+    
+    busNumber: 3,
     collectionTime: new Date(2032, 7, 23, 9, 30),
     estimatedTravelTime: "30",
     capacity: 40,
@@ -129,7 +132,8 @@ const services = [
     reservations: [],
   },
   {
-    eventName: "Tennis",
+    
+    busNumber: 4,
     collectionTime: new Date(2032, 7, 23, 10, 30),
     estimatedTravelTime: "30",
     capacity: 40,
@@ -139,7 +143,8 @@ const services = [
   },
 
   {
-    eventName: "Tennis",
+    
+    busNumber: 5,
     collectionTime: new Date(2032, 7, 23, 11, 30),
     estimatedTravelTime: "30",
     capacity: 40,
@@ -148,7 +153,8 @@ const services = [
     reservations: [],
   },
   {
-    eventName: "Tennis",
+    
+    busNumber: 6,
     collectionTime: new Date(2032, 7, 23, 8, 0),
     estimatedTravelTime: "30",
     capacity: 40,
@@ -157,7 +163,8 @@ const services = [
     reservations: [],
   },
   {
-    eventName: "Tennis",
+    
+    busNumber: 7,
     collectionTime: new Date(2032, 7, 23, 9, 0),
     estimatedTravelTime: "30",
     capacity: 40,
@@ -166,7 +173,8 @@ const services = [
     reservations: [],
   },
   {
-    eventName: "Tennis",
+    
+    busNumber: 8,
     collectionTime: new Date(2032, 7, 23, 10, 0),
     estimatedTravelTime: "30",
     capacity: 40,
@@ -175,7 +183,8 @@ const services = [
     reservations: [],
   },
   {
-    eventName: "Tennis",
+    
+    busNumber: 9,
     collectionTime: new Date(2032, 7, 23, 11, 0),
     estimatedTravelTime: "30",
     capacity: 40,
@@ -185,7 +194,8 @@ const services = [
   },
 
   {
-    eventName: "Tennis",
+    
+    busNumber: 10,
     collectionTime: new Date(2032, 7, 23, 12, 0),
     estimatedTravelTime: "30",
     capacity: 40,
@@ -194,7 +204,8 @@ const services = [
     reservations: [],
   },
   {
-    eventName: "Track and field",
+    
+    busNumber: 11,
     collectionTime: new Date(2032, 7, 24, 10, 0),
     estimatedTravelTime: "30",
     capacity: 40,
@@ -203,7 +214,8 @@ const services = [
     reservations: [],
   },
   {
-    eventName: "Track and field",
+    
+    busNumber: 12,
     collectionTime: new Date(2032, 7, 24, 11, 0),
     estimatedTravelTime: "30",
     capacity: 40,
@@ -212,7 +224,8 @@ const services = [
     reservations: [],
   },
   {
-    eventName: "Footbal Finals",
+    
+    busNumber: 13,
     collectionTime: new Date(2032, 7, 30, 17, 0),
     estimatedTravelTime: "30",
     capacity: 40,
@@ -221,7 +234,8 @@ const services = [
     reservations: [],
   },
   {
-    eventName: "Footbal Finals",
+    
+    busNumber: 14,
     collectionTime: new Date(2032, 7, 30, 19, 0),
     estimatedTravelTime: "30",
     capacity: 40,
