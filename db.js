@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
 })
 
 const busServiceSchema = new mongoose.Schema({
-    busNumber: {type: Number, required: true, unique: true},
+    busNumber: {type: Number, required: true},
     collectionTime: { type: Date, required: true},
     estimatedTravelTime: { type: Number, required: true },
     pickupLocation: { type: mongoose.Schema.Types.ObjectId, ref: 'Location', required: true },
