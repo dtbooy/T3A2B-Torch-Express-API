@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {BusService, Reservation, User} from "../db.js";
+import { mongoose } from "mongoose";
 
 const router = Router()
 
@@ -33,11 +34,11 @@ router.post('/', async (req, res) => {
     let reservations = []
     for (let i = 0 ; i < req.body.numberOfTickets; i++) {
         reservations.push({
-            user: req.body.user,
-            busService: req.body.busService
+            user: new mongoose.Types.ObjectId(req.body.user),
+            busService: new mongoose.Types.ObjectId(req.body.busService)
         })
     }
-
+    console.log(reservations)
     try {
         const newReservations = await Reservation.insertMany(reservations);
         //get array of ids of new reservations
