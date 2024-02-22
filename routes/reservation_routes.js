@@ -6,7 +6,7 @@ const router = Router()
 // Get All Reservations 
 router.get('/', async (req, res) => {
     try {
-        const all_reservations = await Reservation.find().populate('busService')
+        const all_reservations = await Reservation.find().populate('busService').populate('user')
         res.status(200).send(all_reservations)
     } catch (err) {
         res.status(500).send({error : err.message})
