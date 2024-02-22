@@ -5,6 +5,9 @@ import bcrypt from 'bcrypt'
 
 const router = Router()
 
+const maxAge = (3 * 24 * 60 * 60)
+
+
 router.post('/', async (req, res) => {
     const { email, password } = req.body
 
@@ -22,15 +25,16 @@ router.post('/', async (req, res) => {
 
         delete user.password
         //reduce expiration in deployment
-        const token = jwt.sign({ userId: user._id, is_admin: user.is_admin, email: user.email }, process.env.SECRET_TOKEN, {expiresIn: '12h'})
+        const token = jwt.sign({ userId: user._id, is_admin: user.is_admin, email: user.email }, process.env.SECRET_TOKEN, {expiresIn: maxAge})
 
         res.cookie("token", token, {
-            httpOnly: true,
+            httpOnly: false,
+            withCredentials: true,
             // secure: true,
-            //maxAge: 100000
+            maxAge: maxAge
         })
         
-        res.send({user, token})
+        res.status(201).send({user, token})
 
 
     } catch (err) {

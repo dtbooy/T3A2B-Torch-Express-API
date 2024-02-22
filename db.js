@@ -20,9 +20,9 @@ const closeConnection = () => {
 }
 // Define Schemas
 const userSchema = new mongoose.Schema({
-    name: { type: String, required: true },
+    name: { type: String, required: [true, "Email is Required"] },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String, required: [true, "Password is Required"] },
     DOB: { type: Date, required: true },
     is_admin: { type: Boolean, required: true },
     reservations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Reservation' }]

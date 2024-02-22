@@ -20,14 +20,29 @@ userRoutes.get("/", async (req, res) => {
 })
 
 // /users - POST
-userRoutes.post("/signup", async (req, res) => {
+userRoutes.post("/", async (req, res) => {
+  const errors = {}
     try {
-        const { email, password, name, DOB} = req.body
-        const user = await User.findOne({ email: email })
+      const { email, password, name, DOB} = req.body
+      const fieldsToValidate = { email, password, name, DOB }
+
+      const user = await User.findOne({ email: email })
 
         if (user) {
-          return res.status(409).json({ error: "User already exists" });
+          errors.email = "You've already made an account"
       }
+
+      for (let field in fieldsToValidate) {
+        if (!fieldsToValidate[field]) {
+            errors[field] = `${field.charAt(0).toUpperCase() + field.slice(1)} is required`
+        }
+      } 
+      // If any errors exist, return 400 Bad Request with error details
+      if (Object.keys(errors).length > 0) {
+          return res.status(400).json({ errors })
+      }
+
+        
         const hash = await bcrypt.hash(password, salt)
 
         const newUser = await User.create({
@@ -38,7 +53,7 @@ userRoutes.post("/signup", async (req, res) => {
           is_admin: false,
           reservations: []
         })
-        
+
         res.status(201).send(newUser)
     } catch (err) {
         res.status(500).send({ error: err.message })
