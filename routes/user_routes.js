@@ -47,13 +47,18 @@ userRoutes.post("/signup", async (req, res) => {
 
 // /users/:id - GET
 userRoutes.get("/:id", async (req, res) => {
-    res.status(200).send(
-        await User.findById(req.params.id).exec()
-        .catch((err) => { 
-            res.status(404).send({ error: err.message })
-        })
-    )
-});
+  try {
+      const user = await User.findById(req.params.id)
+      if (user) {
+          res.status(200).send(user);
+      } else {
+          res.status(404).send({ error: "User not found" })
+      }
+  } catch (err) {
+      res.status(500).send({ error: err.message })
+  }
+})
+
 
 
 // /users/:id - PUT
@@ -79,19 +84,21 @@ userRoutes.put("/:id", async (req, res) => {
 
 // /users/:id – DELETE
 userRoutes.delete("/:id", async (req, res) => {
-    try {
-      // 
-      const deletedUser = await User.findByIdAndDelete(req.params.id);
-      // res with 204 (No content)
-      if (deletedUser) {
-        res.sendStatus(204);
-      } else {
-        res.status(404).send({ error: "Entry not found" });
+  try {
+      const user = await User.findById(req.params.id)
+
+      if (!user) {
+          return res.status(404).send({ error: "User not found" })
       }
-    } catch (err) {
-      res.status(500).send({ error: err.message });
-    }
-  });
+      await Reservation.deleteMany({ user: user._id })
+      await User.findByIdAndDelete(req.params.id)
+
+
+      res.status(204).send({success: 'Location deleted'})
+  } catch (err) {
+      res.status(500).send({ error: err.message })
+  }
+})
   
 
 // /users/:id/reservations - GET

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { BusService } from "../db.js";
+import { BusService, Reservation } from "../db.js";
 
 const servicesRoutes = Router();
 
@@ -92,15 +92,20 @@ servicesRoutes.put("/:id", async (req, res) => {
 // Delete a Bus Service (ADMIN ONLY)
 servicesRoutes.delete("/:id", async (req, res) => {
   try {
-    const deletedService = await BusService.findByIdAndDelete(req.params.id);
-    if (deletedService) {
-      res.status(204).send({ success: "Service deleted" });
-    } else {
-      res.status(404).send({ error: "Service not found" });
-    }
+      const service = await BusService.findById(req.params.id)
+
+      if (!service) {
+          return res.status(404).send({ error: "Service not found" })
+      }
+      await Reservation.deleteMany({ busService: service._id })
+      await BusService.findByIdAndDelete(req.params.id)
+
+
+      res.status(204).send({success: 'Location deleted'})
   } catch (err) {
-    res.status(500).send({ error: err.message });
+      res.status(500).send({ error: err.message })
   }
-});
+})
+  
 
 export default servicesRoutes;
