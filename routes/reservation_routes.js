@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {BusService, Reservation, User} from "../db.js";
 import { mongoose } from "mongoose";
+import { verifyUser } from "./auth.js";
 
 const router = Router()
 
@@ -29,7 +30,8 @@ router.get('/:id', async (req, res) => {
 })
 
 // Create new Reservation
-router.post('/', async (req, res) => {
+
+router.post('/', verifyUser, async (req, res) => {
     // create new reservations array
     let reservations = []
     for (let i = 0 ; i < req.body.numberOfTickets; i++) {
@@ -38,7 +40,7 @@ router.post('/', async (req, res) => {
             busService: new mongoose.Types.ObjectId(req.body.busService)
         })
     }
-    console.log(reservations)
+    console.log(req.headers)
     try {
         const newReservations = await Reservation.insertMany(reservations);
         //get array of ids of new reservations
@@ -57,7 +59,7 @@ router.post('/', async (req, res) => {
 
         res.status(201).send(newReservations);
     } catch (err) {
-        res.status(500).send({ error: err.message });
+        res.status(400).send({ error: err.message });
     }
 })
 
