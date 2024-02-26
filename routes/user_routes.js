@@ -64,6 +64,10 @@ userRoutes.get("/:id", async (req, res) => {
 // /users/:id - PUT
 userRoutes.put("/:id", async (req, res) => {
     try {
+      if (req.body.password) {
+        const hash = await bcrypt.hash(req.body.password, salt)
+        req.body.password = hash
+      }
       // findByIdAndUpdate
       const updatedUser = await User.findByIdAndUpdate(
         req.params.id,
