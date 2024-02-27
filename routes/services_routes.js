@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { BusService, Reservation } from "../db.js";
+import mongoose from "mongoose";
 
 const servicesRoutes = Router();
 
@@ -64,7 +65,12 @@ servicesRoutes.get("/:id", async (req, res) => {
 // Create a new Bus Service (ADMIN ONLY)
 servicesRoutes.post("/", async (req, res) => {
   try {
-    const newService = await BusService.create(req.body);
+    const service = {
+      ...req.body, 
+      pickupLocation : new mongoose.Types.ObjectId(req.body.pickupLocation),
+      dropoffLocation : new mongoose.Types.ObjectId(req.body.dropoffLocation),
+    }
+    const newService = await BusService.create(service);
     res.status(201).send(newService);
   } catch (err) {
     res.status(500).send({ error: err.message });
