@@ -2,10 +2,10 @@ import jwt from 'jsonwebtoken'
 import { User } from '../db.js'
 
 const verifyAdmin = (req, res, next) => {
-    const checkToken = req.header('Authorisation')
+    const checkToken = req.header('Authorization')
 
     if (!checkToken) {
-        return res.status(401).json({error: 'Authorisation token is required'})
+        return res.status(401).json({error: 'Authorization token is required'})
     }
 
     try {
@@ -23,10 +23,11 @@ const verifyAdmin = (req, res, next) => {
 }
 
 const verifyUser = async (req, res, next) => {
-    const checkToken = req.header('Authorisation')
-
+    console.log('Received request with cookies:', req.headers.cookie);
+    const checkToken = req.header('Authorization')
+    console.log(req.headers)
     if (!checkToken) {
-        return res.status(401).json({error: 'Authorisation token is required'})
+        return res.status(401).json({error: 'Authorization token is required'})
     }
 
     try {
@@ -47,10 +48,10 @@ const verifyUser = async (req, res, next) => {
 
 
 const getUserId = (req, res, next) => {
-    const checkToken = req.header('Authorisation')
+    const checkToken = req.header('Authorization')
 
     if (!checkToken) {
-        return res.status(401).json({error: 'Authorisation token is required'})
+        return res.status(401).json({error: 'Authorization token is required'})
     }
 
     try {

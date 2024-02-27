@@ -40,7 +40,7 @@ router.post('/', verifyUser, async (req, res) => {
             busService: new mongoose.Types.ObjectId(req.body.busService)
         })
     }
-    console.log(req.headers)
+    // console.log(req.headers)
     try {
         const newReservations = await Reservation.insertMany(reservations);
         //get array of ids of new reservations
