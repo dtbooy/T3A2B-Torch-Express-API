@@ -11,7 +11,7 @@ const userRoutes = express.Router()
 
 
 // /users - GET
-// Get all users
+// Get all users - Auth(Admin only)
 userRoutes.get("/", verifyAdmin, async (req, res) => {
     try {
         res.status(200).send(await User.find().exec())
@@ -20,7 +20,7 @@ userRoutes.get("/", verifyAdmin, async (req, res) => {
     }
 })
 
-// /users - POST
+// /users - POST Auth(open)
 userRoutes.post("/signup", async (req, res) => {
     try {
         const { email, password, name, DOB} = req.body
@@ -46,7 +46,7 @@ userRoutes.post("/signup", async (req, res) => {
     }
 })
 
-// /users/:id - GET
+// /users/:id - GET - ---------------------------------------------------NOT used
 userRoutes.get("/:id", async (req, res) => {
   try {
       const user = await User.findById(req.params.id)
@@ -62,7 +62,7 @@ userRoutes.get("/:id", async (req, res) => {
 
 
 
-// /users/:id - PUT
+// /users/:id - PUT Auth(user+Admin)
 userRoutes.put("/:id", verifyUser, async (req, res) => {
     try {
       if (req.body.password) {
@@ -87,7 +87,7 @@ userRoutes.put("/:id", verifyUser, async (req, res) => {
   })
 
 
-// /users/:id – DELETE
+// /users/:id – DELETE - Auth(user+Admin)
 userRoutes.delete("/:id", verifyUser, async (req, res) => {
   try {
       const user = await User.findById(req.params.id)
@@ -106,8 +106,8 @@ userRoutes.delete("/:id", verifyUser, async (req, res) => {
 })
   
 
-// /users/:id/reservations - GET
-userRoutes.get("/:id/reservations", async (req, res) => {
+// /users/:id/reservations - GET - Auth(user+admin)
+userRoutes.get("/:id/reservations", verifyUser, async (req, res) => {
   try {
     const reservations = await Reservation.find({ user: req.params.id })
       .populate("user")

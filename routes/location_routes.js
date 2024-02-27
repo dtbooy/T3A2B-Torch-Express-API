@@ -30,7 +30,7 @@ router.get('/:id', async (req, res) => {
 
 
 // Create a new location (ADMIN ONLY)
-router.post('/', async (req, res) => {
+router.post('/', verifyAdmin, async (req, res) => {
     try{
         const instertedLocation = await (Location.create(req.body))
         res.status(201).send(instertedLocation)
@@ -40,7 +40,7 @@ router.post('/', async (req, res) => {
 })
 
 // Update a location (ADMIN ONLY)
-router.put('/:id', async (req, res) => {
+router.put('/:id', verifyAdmin, async (req, res) => {
     try {
         const updatedLocation = await Location.findByIdAndUpdate(req.params.id, req.body, { new: true })
         if (updatedLocation) {
@@ -54,7 +54,7 @@ router.put('/:id', async (req, res) => {
 })
 
 // Delete a location (ADMIN ONLY)
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verifyAdmin, async (req, res) => {
     try {
         const deletedLocation = await Location.findByIdAndDelete(req.params.id)
         if (deletedLocation){
