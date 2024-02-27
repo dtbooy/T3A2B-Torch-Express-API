@@ -1,7 +1,7 @@
 import express from "express";
 import { Reservation, User } from "../db.js"
 import bcrypt from "bcrypt"
-import { verifyUser } from "./auth.js";
+import { verifyAdmin, verifyUser } from "./auth.js";
 
 // change when in production
 // const salt = bcrypt.genSaltSync(10)
@@ -12,7 +12,7 @@ const userRoutes = express.Router()
 
 // /users - GET
 // Get all users
-userRoutes.get("/", async (req, res) => {
+userRoutes.get("/", verifyAdmin, async (req, res) => {
     try {
         res.status(200).send(await User.find().exec())
     } catch (err) {
