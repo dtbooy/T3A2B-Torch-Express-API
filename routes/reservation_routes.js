@@ -1,12 +1,12 @@
 import { Router } from "express";
 import {BusService, Reservation, User} from "../db.js";
 import { mongoose } from "mongoose";
-import { verifyUser } from "./auth.js";
+import { verifyAdmin, verifyUser } from "./auth.js";
 
 const router = Router()
 
-// Get All Reservations 
-router.get('/', async (req, res) => {
+// Get All Reservations - Auth(Admin only)
+router.get('/', verifyAdmin, async (req, res) => {
     try {
         const all_reservations = await Reservation.find().populate('busService').populate('user')
         res.status(200).send(all_reservations)
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
     }
 })
 
-// Get Reservation by ID 
+// Get Reservation by ID ----------------------------------------------------------------------------------I don't think this route is used DEBUG
 router.get('/:id', async (req, res) => {
     try {
         const single_reservation = await Reservation.findById(req.params.id)
@@ -29,8 +29,7 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-// Create new Reservation
-
+// Create new Reservation - Auth (user & admin)
 router.post('/', verifyUser, async (req, res) => {
     // create new reservations array
     let reservations = []
@@ -63,8 +62,8 @@ router.post('/', verifyUser, async (req, res) => {
     }
 })
 
-// Delete Reservation
-router.delete('/:id', async (req, res) => {
+// Delete Reservation - Auth(user & Admin)
+router.delete('/:id', verifyUser, async (req, res) => {
     try {
         const deletedReservation = await Reservation.findByIdAndDelete(req.params.id)
         if (deletedReservation){
