@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { BusService, Reservation } from "../db.js";
 import mongoose from "mongoose";
+import { verifyAdmin } from "./auth.js";
 
 const servicesRoutes = Router();
 
@@ -41,7 +42,7 @@ servicesRoutes.get("/search", async (req, res) => {
 });
 
 // Get all Bus Services
-servicesRoutes.get("/", async (req, res) => {
+servicesRoutes.get("/", verifyAdmin, async (req, res) => {
   try {
     const allServices = await BusService.find().populate("pickupLocation").populate("dropoffLocation")
     res.status(200).send(allServices);
@@ -63,14 +64,14 @@ servicesRoutes.get("/:id", async (req, res) => {
 });
 
 // Create a new Bus Service (ADMIN ONLY)
-servicesRoutes.post("/", async (req, res) => {
+servicesRoutes.post("/", verifyAdmin, async (req, res) => {
   try {
     const service = {
       ...req.body, 
-      pickupLocation : new mongoose.Types.ObjectId(req.body.pickupLocation),
-      dropoffLocation : new mongoose.Types.ObjectId(req.body.dropoffLocation),
+      pickupLocation : new mongoose.Types.ObjectId(req.body.pickupLocation._id),
+      dropoffLocation : new mongoose.Types.ObjectId(req.body.dropoffLocation._id),
     }
-    const newService = await BusService.create(service);
+    const newService = (await BusService.create(service));
     res.status(201).send(newService);
   } catch (err) {
     res.status(500).send({ error: err.message });
@@ -78,11 +79,16 @@ servicesRoutes.post("/", async (req, res) => {
 });
 
 // Update a Bus Service (ADMIN ONLY)
-servicesRoutes.put("/:id", async (req, res) => {
+servicesRoutes.put("/:id", verifyAdmin, async (req, res) => {
   try {
+    const service = {
+      ...req.body, 
+      pickupLocation : new mongoose.Types.ObjectId(req.body.pickupLocation._id),
+      dropoffLocation : new mongoose.Types.ObjectId(req.body.dropoffLocation._id),
+    }
     const updatedService = await BusService.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      service,
       { new: true }
     );
     if (updatedService) {
@@ -96,7 +102,7 @@ servicesRoutes.put("/:id", async (req, res) => {
 });
 
 // Delete a Bus Service (ADMIN ONLY)
-servicesRoutes.delete("/:id", async (req, res) => {
+servicesRoutes.delete("/:id", verifyAdmin, async (req, res) => {
   try {
       const service = await BusService.findById(req.params.id)
 
