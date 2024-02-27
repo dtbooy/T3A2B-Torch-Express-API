@@ -1,6 +1,7 @@
 import express from "express";
 import { Reservation, User } from "../db.js"
 import bcrypt from "bcrypt"
+import { verifyUser } from "./auth.js";
 
 // change when in production
 // const salt = bcrypt.genSaltSync(10)
@@ -62,7 +63,7 @@ userRoutes.get("/:id", async (req, res) => {
 
 
 // /users/:id - PUT
-userRoutes.put("/:id", async (req, res) => {
+userRoutes.put("/:id", verifyUser, async (req, res) => {
     try {
       if (req.body.password) {
         const hash = await bcrypt.hash(req.body.password, salt)
@@ -87,7 +88,7 @@ userRoutes.put("/:id", async (req, res) => {
 
 
 // /users/:id – DELETE
-userRoutes.delete("/:id", async (req, res) => {
+userRoutes.delete("/:id", verifyUser, async (req, res) => {
   try {
       const user = await User.findById(req.params.id)
 
