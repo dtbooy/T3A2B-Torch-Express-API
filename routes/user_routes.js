@@ -2,6 +2,7 @@ import express from "express";
 import { Reservation, User } from "../db.js"
 import bcrypt from "bcrypt"
 import { verifyAdmin, verifyUser } from "./auth.js";
+import jwt from 'jsonwebtoken'
 
 // change when in production
 // const salt = bcrypt.genSaltSync(10)
@@ -39,8 +40,8 @@ userRoutes.post("/signup", async (req, res) => {
           is_admin: false,
           reservations: []
         })
-        
-        res.status(201).send(newUser)
+        const token = jwt.sign({ userId: newUser._id, is_admin: newUser.is_admin, email: newUser.email }, process.env.SECRET_TOKEN, {expiresIn: '12h'})
+        res.status(201).send({user: newUser, token})
     } catch (err) {
         res.status(500).send({ error: err.message })
     }
