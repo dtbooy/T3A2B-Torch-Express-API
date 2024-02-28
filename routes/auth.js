@@ -23,8 +23,7 @@ const verifyAdmin = (req, res, next) => {
 }
 
 const verifyUser = async (req, res, next) => {
-    // Checks if jwt token is a valid user, & is the 
-    console.log('Received request with cookies:', req.headers.cookie);
+    // Checks if jwt token is valid 
     const checkToken = req.header('Authorization')
     // console.log(req.params.id)
     if (!checkToken) {
@@ -34,9 +33,8 @@ const verifyUser = async (req, res, next) => {
     try {
         const decodedToken = jwt.verify(checkToken, process.env.SECRET_TOKEN)
         const userId = decodedToken.userId
-        console.log(decodedToken.is_admin)
         const user = await User.findById(userId)
-        if (!(user && (req.params.id === userId || decodedToken.is_admin))) {
+        if (!user){ 
             return res.status(401).json({error: 'Not Valid User'})
         }
         next()
@@ -44,28 +42,26 @@ const verifyUser = async (req, res, next) => {
     } catch (err) {
         res.status(500).json({error: err.message})
     }
-
-
 }
 
 
-const getUserId = (req, res, next) => {
+const authorisedUser = (token, userId) => {
     const checkToken = req.header('Authorization')
 
     if (!checkToken) {
-        return res.status(401).json({error: 'Authorization token is required'})
+        return false
     }
 
     try {
-        const decodedToken = jwt.verify(checkToken, process.env.SECRET_TOKEN)
-        req.user = decodedToken.userId
-        next()
+        const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN)
+        return (userId === decodedToken.userId) || (decodedToken.is_admin)
+        
     } catch (err) {
-        res.status(500).json({error: err.message})
+        return false
     }
 
 }
 
 
 
-export { verifyAdmin, getUserId, verifyUser }
+export { verifyAdmin, verifyUser, authorisedUser }
