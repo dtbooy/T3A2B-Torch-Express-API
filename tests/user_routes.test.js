@@ -2,27 +2,27 @@ import app from "../app.js";
 import request from "supertest";
 import bcrypt from "bcrypt";
 
-    //   let user = await request(app).post("/login").send({
-    //     email: "user@example.com",
-    //     password: "123456",
-    //   })
-    //   userToken = res.body.token
+//   let user = await request(app).post("/login").send({
+//     email: "user@example.com",
+//     password: "123456",
+//   })
+//   userToken = res.body.token
 
 describe("User routes", () => {
   describe("Get /users with admin credentials", () => {
     let res;
-    let token
+    let token;
     beforeAll(async () => {
       // login & get auth token test user
       let admin = await request(app).post("/login").send({
         email: "admin@example.com",
         password: "admin1234",
-      })
-      token = admin.body.token
-    })
+      });
+      token = admin.body.token;
+    });
 
     beforeEach(async () => {
-      res = await request(app).get("/users").set({ 'Authorization': token });      
+      res = await request(app).get("/users").set({ Authorization: token });
     });
     test("Returns JSON content", () => {
       expect(res.status).toBe(200);
@@ -65,27 +65,33 @@ describe("User routes", () => {
     let res;
     let token;
     beforeAll(async () => {
-        //make sure new user doesn't exist
-        let check = await request(app).post("/login").send({
-            email: "Holden@rocinante.com",
-            password: "password",
-        })
-        await request(app).delete(`/users/${check.body.user._id}`).set({ 'Authorization': admin.body?.token || "none" })
-
+      //make sure new user doesn't exist
+      let check = await request(app).post("/login").send({
+        email: "Holden@rocinante.com",
+        password: "password",
+      });
+      if (check?.body?.user) {
+        await request(app)
+          .delete(`/users/${check.body.user._id}`)
+          .set({ Authorization: check.body?.token || "none" });
+      }
       // create test user
       res = await request(app).post("/users/signup").send({
         name: "James Holden",
         email: "Holden@rocinante.com",
         password: "password",
-        DOB: "1990-04-11", 
+        DOB: "1990-04-11",
       });
-      token = res.body.token
-
+      token = res.body.token;
     });
+
     afterAll(async () => {
       // clean up post from the database
-      const del = await request(app).delete(`/users/${res.body.user._id}`).set({ 'Authorization': token });
-      console.log("deleted", del.status);
+      //   console.log(`/users/${res.body.user._id}`);
+      const del = await request(app)
+        .delete(`/users/${res.body.user._id}`)
+        .set({ Authorization: token });
+      //   console.log("deleted", del.status);
     });
 
     test("Returrns JSON with 201 Status", () => {
@@ -96,7 +102,7 @@ describe("User routes", () => {
       // test response has the correct structure
       expect(res.body.user._id).toBeDefined();
       expect(res.body.user.name).toBeDefined();
-      expect(res.body.user.email).toBeDefined(); 
+      expect(res.body.user.email).toBeDefined();
       expect(res.body.user.password).toBeDefined();
       expect(res.body.user.DOB).toBeDefined();
       expect(res.body.user.is_admin).toBeDefined();
@@ -112,6 +118,141 @@ describe("User routes", () => {
       expect(res.body.user.is_admin).toBe(false);
       expect(res.body.user.reservations).toBeInstanceOf(Array);
       expect(res.body.user.reservations.length).toBe(0);
+    });
+  });
+  describe("DELETE / entries with user authority", () => {
+    let res;
+    let token;
+    let userId;
+    beforeEach(async () => {
+      // Create a new user
+      const testUser = await request(app).post("/users/signup").send({
+        name: "James Holden",
+        email: "Holden@rocinante.com",
+        password: "password",
+        DOB: "1990-04-11",
+      });
+      token = testUser.body.token;
+      userId = testUser?.body?.user?._id;
+      res = await request(app)
+        .delete(`/users/${userId}`)
+        .set({ Authorization: token });
+    });
+
+    test("Returns 204 Status & no content", async () => {
+      expect(res.status).toBe(204);
+    });
+    test("Deletes the user from the database", async () => {
+      // check user exists
+      const getAfterUserResponse = await request(app)
+        .get(`/users/${userId}`)
+        .set({ Authorization: token });
+      expect(getAfterUserResponse.status).toBe(404);
+    });
+    test("Returns 401 Unauthorized status code if user attached to credentials doesn't exist", async () => {
+      // try to delete user again (now it does not exist)
+      const secondDeleteResponse = await request(app)
+        .delete(`/users/${userId}`)
+        .set({ Authorization: token });
+      expect(secondDeleteResponse.status).toBe(401);
+    });
+  });
+  describe("DELETE / entries with ADMIN authority", () => {
+    let res;
+    let token;
+    let userId;
+    beforeAll(async () => {
+      let admin = await request(app).post("/login").send({
+        email: "admin@example.com",
+        password: "admin1234",
+      });
+      token = admin.body.token;
+    });
+    beforeEach(async () => {
+      // Create a new user
+      const testUser = await request(app).post("/users/signup").send({
+        name: "James Holden",
+        email: "Holden@rocinante.com",
+        password: "password",
+        DOB: "1990-04-11",
+      });
+      userId = testUser?.body?.user?._id;
+      res = await request(app)
+        .delete(`/users/${userId}`)
+        .set({ Authorization: token });
+    });
+
+    test("Returns 204 Status & no content", async () => {
+      expect(res.status).toBe(204);
+    });
+    test("Deletes the user from the database", async () => {
+      // check user exists
+      const getAfterUserResponse = await request(app)
+        .get(`/users/${userId}`)
+        .set({ Authorization: token });
+      expect(getAfterUserResponse.status).toBe(404);
+    });
+    test("Returns 404 (Not Found) status code if user does not exist", async () => {
+      // try to delete user again
+      const secondDeleteResponse = await request(app)
+        .delete(`/users/${userId}`)
+        .set({ Authorization: token });
+      expect(secondDeleteResponse.status).toBe(404);
+    });
+  });
+  describe("PUT / routes - user credentials", () => {
+    let res;
+    let token;
+    let userId;
+    beforeAll(async () => {
+      // create test user
+      res = await request(app).post("/users/signup").send({
+        name: "James Holden",
+        email: "Holden@rocinante.com",
+        password: "password",
+        DOB: "1990-04-11",
+      });
+      // assign test user variables
+      token = res.body.token;
+      userId = res.body.user._id;
+    });
+
+    afterAll(async () => {
+      // clean up post from the database
+      const del = await request(app)
+        .delete(`/users/${userId}`)
+        .set({ Authorization: token });
+    });
+
+    test("Returns 200 status code and updated user object on successful update", async () => {
+      const updateUserResponse = await request(app)
+        .put(`/users/${userId}`)
+        .send({
+          name: "Jane Smith",
+          email: "jane.smith@example.com",
+          DOB: "1990-01-01",
+        })
+        .set({ Authorization: token });
+      expect(updateUserResponse.status).toBe(200);
+      expect(updateUserResponse.header["content-type"]).toContain("json");
+      expect(updateUserResponse.status).toBe(200);
+      expect(updateUserResponse.body.name).toBe("Jane Smith");
+      expect(updateUserResponse.body.email).toBe("jane.smith@example.com");
+      expect(updateUserResponse.body.DOB).toBe(
+        new Date("1990-01-01").toISOString()
+      );
+    });
+    test("Returns 404 status code if user does not exist", async () => {
+      const nonExistentUserId = "5f3dd8318adac102d8a8e801";
+      const updateUserResponse = await request(app)
+        .put(`/users/${nonExistentUserId}`)
+        .send({
+          name: "Jane Smith",
+          email: "jane.smith@example.com",
+          DOB: "1990-01-01",
+        })
+        .set({ Authorization: token });
+      expect(updateUserResponse.status).toBe(404);
     });
   });
 });
