@@ -34,9 +34,9 @@ router.post('/', verifyUser, async (req, res) => {
     try {
         const existingTickets = await Reservation.find({user: req.body.user, busService: req.body.busService})
         console.log("tickets", existingTickets.length)
-        if (existingTickets.length > 9 ){
+        if (existingTickets.length + req.body.numberOfTickets > 10 ){
             throw new Error(`User has ${existingTickets.length} tickets booked, maximum allowed is 10.`)
-        }    
+        }
         // create new reservations array
         let reservations = []
         for (let i = 0 ; i < req.body.numberOfTickets; i++) {
