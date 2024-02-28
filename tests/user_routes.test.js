@@ -2,11 +2,27 @@ import app from "../app.js";
 import request from "supertest";
 import bcrypt from "bcrypt";
 
+    //   let user = await request(app).post("/login").send({
+    //     email: "user@example.com",
+    //     password: "123456",
+    //   })
+    //   userToken = res.body.token
+
 describe("User routes", () => {
-  describe("Get /users", () => {
+  describe("Get /users with admin credentials", () => {
     let res;
+    let token
+    beforeAll(async () => {
+      // login & get auth token test user
+      let admin = await request(app).post("/login").send({
+        email: "admin@example.com",
+        password: "admin1234",
+      })
+      token = admin.body.token
+    })
+
     beforeEach(async () => {
-      res = await request(app).get("/users");
+      res = await request(app).get("/users").set({ 'Authorization': token });      
     });
     test("Returns JSON content", () => {
       expect(res.status).toBe(200);
@@ -46,20 +62,29 @@ describe("User routes", () => {
   });
 
   describe("POST / entries", () => {
-    let cats;
     let res;
+    let token;
     beforeAll(async () => {
+        //make sure new user doesn't exist
+        let check = await request(app).post("/login").send({
+            email: "Holden@rocinante.com",
+            password: "password",
+        })
+        await request(app).delete(`/users/${check.body.user._id}`).set({ 'Authorization': admin.body?.token || "none" })
+
       // create test user
-      res = await request(app).post("/users").send({
+      res = await request(app).post("/users/signup").send({
         name: "James Holden",
         email: "Holden@rocinante.com",
         password: "password",
-        DOB: "1990-04-11",
+        DOB: "1990-04-11", 
       });
+      token = res.body.token
+
     });
     afterAll(async () => {
       // clean up post from the database
-      const del = await request(app).delete(`/users/${res.body._id}`);
+      const del = await request(app).delete(`/users/${res.body.user._id}`).set({ 'Authorization': token });
       console.log("deleted", del.status);
     });
 
@@ -69,23 +94,24 @@ describe("User routes", () => {
     });
     test("POST Returns correct structure", () => {
       // test response has the correct structure
-      expect(res.body._id).toBeDefined();
-      expect(res.body.name).toBeDefined();
-      expect(res.body.email).toBeDefined();
-      expect(res.body.password).toBeDefined();
-      expect(res.body.DOB).toBeDefined();
-      expect(res.body.is_admin).toBeDefined();
-      expect(res.body.reservations).toBeDefined();
+      expect(res.body.user._id).toBeDefined();
+      expect(res.body.user.name).toBeDefined();
+      expect(res.body.user.email).toBeDefined(); 
+      expect(res.body.user.password).toBeDefined();
+      expect(res.body.user.DOB).toBeDefined();
+      expect(res.body.user.is_admin).toBeDefined();
+      expect(res.body.user.reservations).toBeDefined();
+      expect(res.body.token).toBeDefined();
     });
     test("POST returns the correct content", () => {
-      expect(res.body.name).toBe("James Holden");
-      expect(res.body.email).toBe("Holden@rocinante.com");
+      expect(res.body.user.name).toBe("James Holden");
+      expect(res.body.user.email).toBe("Holden@rocinante.com");
       //ensure password is hashed
-      expect(res.body.password).not.toEqual("password");
-      expect(res.body.DOB).toBe(new Date("1990-04-11").toISOString());
-      expect(res.body.is_admin).toBe(false);
-      expect(res.body.reservations).toBeInstanceOf(Array);
-      expect(res.body.reservations.length).toBe(0);
+      expect(res.body.user.password).not.toEqual("password");
+      expect(res.body.user.DOB).toBe(new Date("1990-04-11").toISOString());
+      expect(res.body.user.is_admin).toBe(false);
+      expect(res.body.user.reservations).toBeInstanceOf(Array);
+      expect(res.body.user.reservations.length).toBe(0);
     });
   });
 });
