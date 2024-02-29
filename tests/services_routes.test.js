@@ -105,7 +105,6 @@ describe("Services routes", () => {
           capacity: 50,
         })
         .set({ Authorization: token });
-      //   console.log("Res", res.body)
     });
 
     afterAll(async () => {
@@ -113,7 +112,6 @@ describe("Services routes", () => {
       const del = await request(app)
         .delete(`/services/${res.body._id}`)
         .set({ Authorization: token });
-      console.log("deleted", del.status);
     });
     test("Returrns JSON with 201 Status", () => {
       expect(res.status).toBe(201);
@@ -140,7 +138,7 @@ describe("Services routes", () => {
     });
   });
 
-  describe("DELETE /services entry with admin authority", () => {
+  describe("DELETE /services entry with admin credentials", () => {
     let res;
     let token;
     let serviceId;
@@ -217,5 +215,75 @@ describe("Services routes", () => {
       expect(secondDeleteResponse.status).toBe(403);
     });
   });
-  
+
+  describe("PUT / routes - user credentials", () => {
+    let res;
+    let token;
+    let serviceId;
+    let locs;
+    beforeAll(async () => {
+      let admin = await request(app).post("/login").send({
+        email: "admin@example.com",
+        password: "admin1234",
+      });
+      // set credentials
+      token = admin.body.token;
+      // get location ids
+      locs = await request(app)
+        .get("/locations/")
+        .set({ Authorization: token });
+    });
+    beforeEach(async () => {
+      // Create a test Service
+      const testService = await request(app)
+        .post("/services/")
+        .send({
+          busNumber: 666,
+          collectionTime: new Date(2032, 7, 30).toISOString(),
+          estimatedTravelTime: 50,
+          pickupLocation: locs.body[0]._id,
+          dropoffLocation: locs.body[1]._id,
+          capacity: 50,
+        })
+        .set({ Authorization: token });
+      serviceId = testService.body._id;
+    });
+    afterAll(async () => {
+      // delete service
+      res = await request(app)
+        .delete(`/services/${serviceId}`)
+        .set({ Authorization: token });
+    });
+
+    test("Returns 200 status code and updated service object on successful update", async () => {
+      const updateServiceResponse = await request(app)
+        .put(`/services/${serviceId}`)
+        .send({
+          busNumber: 777,
+          collectionTime: new Date(2032, 8, 30).toISOString(),
+          estimatedTravelTime: 10,
+        })
+        .set({ Authorization: token });
+      expect(updateServiceResponse.status).toBe(200);
+      expect(updateServiceResponse.header["content-type"]).toContain("json");
+      expect(updateServiceResponse.body.busNumber).toBe(777);
+      expect(updateServiceResponse.body.collectionTime).toBe(
+        new Date(2032, 8, 30).toISOString()
+      );
+      expect(updateServiceResponse.body.estimatedTravelTime).toBe(10);
+    });
+
+    test("Returns 404 status code if service does not exist", async () => {
+      const nonExistentServiceId = "5f3dd8318adac102d8a8e801";
+      const updateServiceResponse = await request(app)
+        .put(`/users/${nonExistentServiceId}`)
+        .send({
+          busNumber: 777,
+          collectionTime: new Date(2032, 8, 30).toISOString(),
+          estimatedTravelTime: 10,
+        })
+        .set({ Authorization: token });
+      expect(updateServiceResponse.status).toBe(404);
+    });
+  });
 });
