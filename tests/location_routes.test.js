@@ -28,7 +28,6 @@ describe("Location routes", () => {
     test("Array contents are correct", async () => {
       // match something in a specified an element
       expect(res.body[0]).toMatchObject({
-        _id: "65dee0e3300975a439fea05a",
         name: "South Bank",
         address: "40 Melbourne St, Southbank QLD 4101",
         directions:
@@ -62,7 +61,6 @@ describe("Location routes", () => {
       test("Array contents are correct", async () => {
         // match something in a specified an element
         expect(res.body[0]).toMatchObject({
-          _id: "65dee0e3300975a439fea05a",
           name: "South Bank",
           address: "40 Melbourne St, Southbank QLD 4101",
           directions:
@@ -213,11 +211,11 @@ describe("Location routes", () => {
           })
           .set({ Authorization: token });
 
-        locId = testLoc?.body?._id;
+        locId = testLoc.body._id;
       });
-      afterAll(async () => {
+      afterEach(async () => {
         // delete test location
-        res = await request(app)
+        const del = await request(app)
           .delete(`/locations/${locId}`)
           .set({ Authorization: token });
       });

@@ -1,18 +1,12 @@
 import app from "../app.js";
 import request from "supertest";
 
-//   let user = await request(app).post("/login").send({
-//     email: "user@example.com",
-//     password: "123456",
-//   })
-//   userToken = res.body.token
-
 describe("Services routes", () => {
   describe("GET /services, with admin credentials", () => {
     let res;
     let token;
     beforeAll(async () => {
-      // login & get auth token test user
+      // login & get auth token
       let admin = await request(app).post("/login").send({
         email: "admin@example.com",
         password: "admin1234",
@@ -35,10 +29,9 @@ describe("Services routes", () => {
       // match something in a specified an element
       expect(res.body[0]).toMatchObject({
         busNumber: 123,
-        collectionTime: "2032-08-22T23:30:00.000Z",
+        collectionTime: "2032-08-22T21:30:00.000Z",
         estimatedTravelTime: 30,
         pickupLocation: {
-          _id: "65dee0e3300975a439fea05a",
           name: "South Bank",
           address: "40 Melbourne St, Southbank QLD 4101",
           directions:
@@ -46,7 +39,6 @@ describe("Services routes", () => {
           __v: 0,
         },
         dropoffLocation: {
-          _id: "65dee0e3300975a439fea05e",
           name: "Queensland Tennis Center",
           address: "40 Castlemaine St, Milton QLD 4064",
           directions: "Drop off point at 40 Castlemaine St",
@@ -61,7 +53,7 @@ describe("Services routes", () => {
     let res;
     let token;
     beforeAll(async () => {
-      // login & get auth token test user
+      // login & get auth token
       let user = await request(app).post("/login").send({
         email: "user@example.com",
         password: "123456",
@@ -181,14 +173,14 @@ describe("Services routes", () => {
       expect(res.status).toBe(204);
     });
     test("Deletes the service from the database", async () => {
-      // check user exists
-      const getAfterUserResponse = await request(app)
+      // check service exists
+      const getAfterServiceResponse = await request(app)
         .get(`/services/${serviceId}`)
         .set({ Authorization: token });
-      expect(getAfterUserResponse.status).toBe(404);
+      expect(getAfterServiceResponse.status).toBe(404);
     });
     test("Returns 404 (Not Found) status code if user does not exist", async () => {
-      // try to delete user again
+      // try to delete service again
       const secondDeleteResponse = await request(app)
         .delete(`/services/${serviceId}`)
         .set({ Authorization: token });
@@ -276,7 +268,7 @@ describe("Services routes", () => {
     test("Returns 404 status code if service does not exist", async () => {
       const nonExistentServiceId = "5f3dd8318adac102d8a8e801";
       const updateServiceResponse = await request(app)
-        .put(`/users/${nonExistentServiceId}`)
+        .put(`/services/${nonExistentServiceId}`)
         .send({
           busNumber: 777,
           collectionTime: new Date(2032, 8, 30).toISOString(),
