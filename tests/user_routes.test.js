@@ -71,27 +71,27 @@ describe("User routes", () => {
         password: "admin1234",
       });
       token = admin.body.token;
-      userId = admin.body.user._id
-    //   console.log("admin:", admin.body)
+      userId = admin.body.user._id;
     });
 
     beforeEach(async () => {
-      res = await request(app).get(`/users/${userId}`).set({ Authorization: token });
+      res = await request(app)
+        .get(`/users/${userId}`)
+        .set({ Authorization: token });
     });
     test("Returns JSON content", () => {
-        // console.log("userId", userId)
       expect(res.status).toBe(200);
       expect(res.header["content-type"]).toContain("json");
     });
     test("Returns correct structure", () => {
-        // test response has the correct structure
-        expect(res.body._id).toBeDefined();
-        expect(res.body.name).toBeDefined();
-        expect(res.body.email).toBeDefined();
-        expect(res.body.password).toBeDefined();
-        expect(res.body.DOB).toBeDefined();
-        expect(res.body.is_admin).toBeDefined();
-        expect(res.body.reservations).toBeDefined();
+      // test response has the correct structure
+      expect(res.body._id).toBeDefined();
+      expect(res.body.name).toBeDefined();
+      expect(res.body.email).toBeDefined();
+      expect(res.body.password).toBeDefined();
+      expect(res.body.DOB).toBeDefined();
+      expect(res.body.is_admin).toBeDefined();
+      expect(res.body.reservations).toBeDefined();
     });
     test("Array contents are correct", async () => {
       // match an exact route
@@ -106,7 +106,9 @@ describe("User routes", () => {
       expect(res.body.reservations).toBeInstanceOf(Array);
     });
     test("Password is hashed", async () => {
-      const correctPassword = await bcrypt.compare("admin1234", res.body.password
+      const correctPassword = await bcrypt.compare(
+        "admin1234",
+        res.body.password
       );
       expect(correctPassword).toBe(true);
       const wrongPassword = await bcrypt.compare(
@@ -142,11 +144,9 @@ describe("User routes", () => {
 
     afterAll(async () => {
       // clean up post from the database
-      //   console.log(`/users/${res.body.user._id}`);
       const del = await request(app)
         .delete(`/users/${res.body.user._id}`)
         .set({ Authorization: token });
-      //   console.log("deleted", del.status);
     });
 
     test("Returrns JSON with 201 Status", () => {
@@ -324,13 +324,12 @@ describe("User routes", () => {
       });
       // assign test user variables
       userId = res.body.user._id;
-    // login & get auth token test user
-    let admin = await request(app).post("/login").send({
+      // login & get auth token test user
+      let admin = await request(app).post("/login").send({
         email: "admin@example.com",
         password: "admin1234",
-        });
-        token = admin.body.token;
-
+      });
+      token = admin.body.token;
     });
 
     afterAll(async () => {
@@ -351,7 +350,6 @@ describe("User routes", () => {
         .set({ Authorization: token });
       expect(updateUserResponse.status).toBe(200);
       expect(updateUserResponse.header["content-type"]).toContain("json");
-      expect(updateUserResponse.status).toBe(200);
       expect(updateUserResponse.body.name).toBe("Jane Smith");
       expect(updateUserResponse.body.email).toBe("jane.smith@example.com");
       expect(updateUserResponse.body.DOB).toBe(
