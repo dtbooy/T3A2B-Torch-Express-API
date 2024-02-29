@@ -60,8 +60,63 @@ describe("User routes", () => {
       expect(wrongPassword).toBe(false);
     });
   });
+  describe("Get /users/:id with admin credentials", () => {
+    let res;
+    let token;
+    let userId;
+    beforeAll(async () => {
+      // login & get auth token test user
+      let admin = await request(app).post("/login").send({
+        email: "admin@example.com",
+        password: "admin1234",
+      });
+      token = admin.body.token;
+      userId = admin.body.user._id
+    //   console.log("admin:", admin.body)
+    });
 
-  describe("POST / entries", () => {
+    beforeEach(async () => {
+      res = await request(app).get(`/users/${userId}`).set({ Authorization: token });
+    });
+    test("Returns JSON content", () => {
+        // console.log("userId", userId)
+      expect(res.status).toBe(200);
+      expect(res.header["content-type"]).toContain("json");
+    });
+    test("Returns correct structure", () => {
+        // test response has the correct structure
+        expect(res.body._id).toBeDefined();
+        expect(res.body.name).toBeDefined();
+        expect(res.body.email).toBeDefined();
+        expect(res.body.password).toBeDefined();
+        expect(res.body.DOB).toBeDefined();
+        expect(res.body.is_admin).toBeDefined();
+        expect(res.body.reservations).toBeDefined();
+    });
+    test("Array contents are correct", async () => {
+      // match an exact route
+      expect(res.body.name).toBe("Test Administrator");
+      // match something in a specified an element
+      expect(res.body).toMatchObject({
+        name: "Test Administrator",
+        email: "admin@example.com",
+        DOB: new Date(1995, 3, 12).toISOString(),
+        is_admin: true,
+      });
+      expect(res.body.reservations).toBeInstanceOf(Array);
+    });
+    test("Password is hashed", async () => {
+      const correctPassword = await bcrypt.compare("admin1234", res.body.password
+      );
+      expect(correctPassword).toBe(true);
+      const wrongPassword = await bcrypt.compare(
+        "wrongpassword",
+        res.body.password
+      );
+      expect(wrongPassword).toBe(false);
+    });
+  });
+  describe("POST /users ", () => {
     let res;
     let token;
     beforeAll(async () => {
@@ -120,7 +175,7 @@ describe("User routes", () => {
       expect(res.body.user.reservations.length).toBe(0);
     });
   });
-  describe("DELETE / entries with user authority", () => {
+  describe("DELETE /users/:id entry - with user authority", () => {
     let res;
     let token;
     let userId;
@@ -157,7 +212,7 @@ describe("User routes", () => {
       expect(secondDeleteResponse.status).toBe(401);
     });
   });
-  describe("DELETE / entries with ADMIN authority", () => {
+  describe("DELETE /user/:id entry with ADMIN authority", () => {
     let res;
     let token;
     let userId;
@@ -200,7 +255,7 @@ describe("User routes", () => {
       expect(secondDeleteResponse.status).toBe(404);
     });
   });
-  describe("PUT / routes - user credentials", () => {
+  describe("PUT /user/:id entry - user credentials", () => {
     let res;
     let token;
     let userId;
@@ -215,6 +270,67 @@ describe("User routes", () => {
       // assign test user variables
       token = res.body.token;
       userId = res.body.user._id;
+    });
+
+    afterAll(async () => {
+      // clean up post from the database
+      const del = await request(app)
+        .delete(`/users/${userId}`)
+        .set({ Authorization: token });
+    });
+
+    test("Returns 200 status code and updated user object on successful update", async () => {
+      const updateUserResponse = await request(app)
+        .put(`/users/${userId}`)
+        .send({
+          name: "Jane Smith",
+          email: "jane.smith@example.com",
+          DOB: "1990-01-01",
+        })
+        .set({ Authorization: token });
+      expect(updateUserResponse.status).toBe(200);
+      expect(updateUserResponse.header["content-type"]).toContain("json");
+      expect(updateUserResponse.status).toBe(200);
+      expect(updateUserResponse.body.name).toBe("Jane Smith");
+      expect(updateUserResponse.body.email).toBe("jane.smith@example.com");
+      expect(updateUserResponse.body.DOB).toBe(
+        new Date("1990-01-01").toISOString()
+      );
+    });
+    test("Returns 404 status code if user does not exist", async () => {
+      const nonExistentUserId = "5f3dd8318adac102d8a8e801";
+      const updateUserResponse = await request(app)
+        .put(`/users/${nonExistentUserId}`)
+        .send({
+          name: "Jane Smith",
+          email: "jane.smith@example.com",
+          DOB: "1990-01-01",
+        })
+        .set({ Authorization: token });
+      expect(updateUserResponse.status).toBe(404);
+    });
+  });
+  describe("PUT /user/:id entry - Admin credentials", () => {
+    let res;
+    let token;
+    let userId;
+    beforeAll(async () => {
+      // create test user
+      res = await request(app).post("/users/signup").send({
+        name: "James Holden",
+        email: "Holden@rocinante.com",
+        password: "password",
+        DOB: "1990-04-11",
+      });
+      // assign test user variables
+      userId = res.body.user._id;
+    // login & get auth token test user
+    let admin = await request(app).post("/login").send({
+        email: "admin@example.com",
+        password: "admin1234",
+        });
+        token = admin.body.token;
+
     });
 
     afterAll(async () => {
