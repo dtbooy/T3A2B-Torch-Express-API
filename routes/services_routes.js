@@ -30,10 +30,13 @@ servicesRoutes.get("/search", async (req, res) => {
   };
   try {
     let services = await BusService.find(filters).lean();
-     
+
     if (services) {
-        // replace reservations array with reservation count (limits exposure of Reservation ids)
-      services = services.map(service=>({...service, reservations : service.reservations.length}))
+      // replace reservations array with reservation count (limits exposure of Reservation ids)
+      services = services.map((service) => ({
+        ...service,
+        reservations: service.reservations.length,
+      }));
       res.send(services);
     } else res.status(404).send({ error: "No Service found " });
   } catch (err) {
@@ -44,7 +47,9 @@ servicesRoutes.get("/search", async (req, res) => {
 // Get all Bus Services
 servicesRoutes.get("/", verifyAdmin, async (req, res) => {
   try {
-    const allServices = await BusService.find().populate("pickupLocation").populate("dropoffLocation")
+    const allServices = await BusService.find()
+      .populate("pickupLocation")
+      .populate("dropoffLocation");
     res.status(200).send(allServices);
   } catch (err) {
     res.status(500).send({ error: err.message });
@@ -66,12 +71,13 @@ servicesRoutes.get("/:id", async (req, res) => {
 // Create a new Bus Service (ADMIN ONLY)
 servicesRoutes.post("/", verifyAdmin, async (req, res) => {
   try {
-    const service = {
-      ...req.body, 
-      pickupLocation : new mongoose.Types.ObjectId(req.body.pickupLocation._id),
-      dropoffLocation : new mongoose.Types.ObjectId(req.body.dropoffLocation._id),
-    }
-    const newService = (await BusService.create(service));
+    const newService = await BusService.create(req.body);
+
+    await BusService.populate(newService, {
+      path: "pickupLocation dropoffLocation",
+      select: "name",
+    });
+
     res.status(201).send(newService);
   } catch (err) {
     res.status(500).send({ error: err.message });
@@ -81,22 +87,17 @@ servicesRoutes.post("/", verifyAdmin, async (req, res) => {
 // Update a Bus Service (ADMIN ONLY)
 servicesRoutes.put("/:id", verifyAdmin, async (req, res) => {
   try {
-    let service = {...req.body}
-    if (req.body.pickupLocation){  
-    service = {
-      ...req.body, 
-      pickupLocation : new mongoose.Types.ObjectId(req.body.pickupLocation._id),
-    }}
-    if (req.body.dropoffLocation){  
-      service = {
-      ...req.body, 
-      dropoffLocation : new mongoose.Types.ObjectId(req.body.dropoffLocation._id),
-    }}
+    let service = { ...req.body };
+
     const updatedService = await BusService.findByIdAndUpdate(
       req.params.id,
       service,
       { new: true }
     );
+    await BusService.populate(updatedService, {
+      path: "pickupLocation dropoffLocation",
+      select: "name",
+    });
     if (updatedService) {
       res.send(updatedService);
     } else {
@@ -110,20 +111,18 @@ servicesRoutes.put("/:id", verifyAdmin, async (req, res) => {
 // Delete a Bus Service (ADMIN ONLY)
 servicesRoutes.delete("/:id", verifyAdmin, async (req, res) => {
   try {
-      const service = await BusService.findById(req.params.id)
+    const service = await BusService.findById(req.params.id);
 
-      if (!service) {
-          return res.status(404).send({ error: "Service not found" })
-      }
-      await Reservation.deleteMany({ busService: service._id })
-      await BusService.findByIdAndDelete(req.params.id)
+    if (!service) {
+      return res.status(404).send({ error: "Service not found" });
+    }
+    await Reservation.deleteMany({ busService: service._id });
+    await BusService.findByIdAndDelete(req.params.id);
 
-
-      res.status(204).send({success: 'Location deleted'})
+    res.status(204).send({ success: "Location deleted" });
   } catch (err) {
-      res.status(500).send({ error: err.message })
+    res.status(500).send({ error: err.message });
   }
-})
-  
+});
 
 export default servicesRoutes;
