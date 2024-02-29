@@ -1,7 +1,16 @@
-# T3A2
+# T3A2 - Full Stack App (Part B)
 
-# GitHub Repo
-[T3A2- Part A Repo](https://github.com/dtbooy/T3A2A)
+# R10 Deployment links
+[Production Website - https://torchexpress.netlify.app/](https://torchexpress.netlify.app/)
+[Deployed API - https://t3a2b-torch-express-api.onrender.com](https://t3a2b-torch-express-api.onrender.com)
+
+# R11 GitHub Repos
+[T3A2-A Repo](https://github.com/dtbooy/T3A2A)
+[T3A2-B Backend Repo](https://github.com/dtbooy/T3A2B-Torch-Express-API)
+[T3A2-B Frontend Repo](https://github.com/dtbooy/T3A2B-Torch-Express-Front-End)
+
+# Manual Testing Document
+[Testing document Google docs](https://docs.google.com/document/d/1-OH11vcpysQHJBcWNGXAWlOwStB04-EWAIszu_B7AHs/edit?usp=drive_link)
 
 # Development Team 
 |  |  |
@@ -11,6 +20,7 @@
 | Max Handley | [GitHub Profile](https://github.com/maxhandley97) |
 
 
+# R12 Full Stack App - Part A README.md
 # R1 	Website Description
 
 ## Purpose
@@ -267,16 +277,8 @@ User stories are a fundamental component of agile software development methodolo
 <img src="./docs/Images/Wireframes/14 - locations page admin.drawio.png" alt="Wireframe">
 
 
-
-
-
-
-
-
 # R6 	Trello Board Screenshots 
 [Our Trello Board](https://trello.com/b/eErgaOOb/t3a2-team-board)
-
-
 
 <img src="./docs/Images/Trello Screenshots/day 1.png" alt="Trello Screenshot">
 <img src="./docs/Images/Trello Screenshots/day 2.png" alt="Trello Screenshot">
@@ -290,5 +292,6 @@ User stories are a fundamental component of agile software development methodolo
 <img src="./docs/Images/Trello Screenshots/day7.png" alt="Trello Screenshot">
 
 
+# R13 	Trello Board Screenshots - Part B
 
 
