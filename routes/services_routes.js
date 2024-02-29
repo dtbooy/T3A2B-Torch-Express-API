@@ -92,7 +92,6 @@ servicesRoutes.put("/:id", verifyAdmin, async (req, res) => {
       ...req.body, 
       dropoffLocation : new mongoose.Types.ObjectId(req.body.dropoffLocation._id),
     }}
-    console.log(service)
     const updatedService = await BusService.findByIdAndUpdate(
       req.params.id,
       service,
