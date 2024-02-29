@@ -41,8 +41,8 @@ router.post('/', verifyUser, async (req, res) => {
         let reservations = []
         for (let i = 0 ; i < parseInt(req.body.numberOfTickets); i++) {
             reservations.push({
-                user: new mongoose.Types.ObjectId(req.body.user),
-                busService: new mongoose.Types.ObjectId(req.body.busService)
+                user: req.body.user,
+                busService: req.body.busService
             })
         }
 
