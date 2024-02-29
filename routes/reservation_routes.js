@@ -72,14 +72,18 @@ router.post('/', verifyUser, async (req, res) => {
 router.delete('/:id', verifyUser, async (req, res) => {
     try {
         const deletedReservation = await Reservation.findByIdAndDelete(req.params.id)
-        if (deletedReservation){
-            res.status(204).send({success: 'Reservation deleted'})
+        if (deletedReservation) {
+            // Remove reservation ID from corresponding bus service
+            await BusService.updateOne(
+                { _id: deletedReservation.busService }, // Filter by busService ID
+                { $pull: { reservations: deletedReservation._id } } // Remove reservation ID from the array
+            )
+            res.status(204).send({ success: 'Reservation deleted' })
         } else {
-            res.status(404).send({error: 'Reservation not found'})
+            res.status(404).send({ error: 'Reservation not found' })
         }
-
     } catch (err) {
-        res.status(500).send({error: err.message})
+        res.status(500).send({ error: err.message })
     }
 })
 
