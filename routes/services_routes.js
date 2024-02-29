@@ -81,11 +81,17 @@ servicesRoutes.post("/", verifyAdmin, async (req, res) => {
 // Update a Bus Service (ADMIN ONLY)
 servicesRoutes.put("/:id", verifyAdmin, async (req, res) => {
   try {
-    const service = {
+    let service = {...req.body}
+    if (req.body.pickupLocation){  
+    service = {
       ...req.body, 
       pickupLocation : new mongoose.Types.ObjectId(req.body.pickupLocation._id),
+    }}
+    if (req.body.dropoffLocation){  
+      service = {
+      ...req.body, 
       dropoffLocation : new mongoose.Types.ObjectId(req.body.dropoffLocation._id),
-    }
+    }}
     const updatedService = await BusService.findByIdAndUpdate(
       req.params.id,
       service,

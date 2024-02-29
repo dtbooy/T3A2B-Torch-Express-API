@@ -15,7 +15,7 @@ router.get('/', verifyAdmin, async (req, res) => {
     }
 })
 
-// Get Reservation by ID ----------------------------------------------------------------------------------I don't think this route is used DEBUG
+// Get Reservation by ID 
 router.get('/:id', async (req, res) => {
     try {
         const single_reservation = await Reservation.findById(req.params.id)
