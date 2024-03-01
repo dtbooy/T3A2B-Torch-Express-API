@@ -243,7 +243,98 @@ const services = [
     dropoffLocation: locationResponse[1]._id,
     reservations: [],
   },
+  {
+    busNumber: 666,
+    collectionTime: new Date(2032, 7, 23, 8, 0),
+    estimatedTravelTime: "40",
+    capacity: 40,
+    pickupLocation: locationResponse[4]._id,
+    dropoffLocation: locationResponse[0]._id,
+    reservations: []
+  },
+  {
+    busNumber: 777,
+    collectionTime: new Date(2032, 7, 23, 9, 0),
+    estimatedTravelTime: "50",
+    capacity: 40,
+    pickupLocation: locationResponse[5]._id,
+    dropoffLocation: locationResponse[1]._id,
+    reservations: []
+  },
+  {
+    busNumber: 888,
+    collectionTime: new Date(2032, 7, 23, 10, 0),
+    estimatedTravelTime: "45",
+    capacity: 40,
+    pickupLocation: locationResponse[6]._id,
+    dropoffLocation: locationResponse[2]._id,
+    reservations: []
+  },
+  {
+    busNumber: 999,
+    collectionTime: new Date(2032, 7, 23, 11, 0),
+    estimatedTravelTime: "55",
+    capacity: 40,
+    pickupLocation: locationResponse[7]._id,
+    dropoffLocation: locationResponse[3]._id,
+    reservations: []
+  },
+  {
+    busNumber: 111,
+    collectionTime: new Date(2032, 7, 23, 12, 0),
+    estimatedTravelTime: "35",
+    capacity: 40,
+    pickupLocation: locationResponse[0]._id,
+    dropoffLocation: locationResponse[5]._id,
+    reservations: []
+  },
+    {
+    busNumber: 222,
+    collectionTime: new Date(2032, 7, 24, 8, 30),
+    estimatedTravelTime: "40",
+    capacity: 40,
+    pickupLocation: locationResponse[4]._id,
+    dropoffLocation: locationResponse[0]._id,
+    reservations: []
+  },
+  {
+    busNumber: 333,
+    collectionTime: new Date(2032, 7, 24, 9, 0),
+    estimatedTravelTime: "50",
+    capacity: 40,
+    pickupLocation: locationResponse[5]._id,
+    dropoffLocation: locationResponse[1]._id,
+    reservations: []
+  },
+  {
+    busNumber: 444,
+    collectionTime: new Date(2032, 7, 24, 10, 0),
+    estimatedTravelTime: "45",
+    capacity: 40,
+    pickupLocation: locationResponse[6]._id,
+    dropoffLocation: locationResponse[2]._id,
+    reservations: []
+  },
+  {
+    busNumber: 555,
+    collectionTime: new Date(2032, 7, 24, 11, 0),
+    estimatedTravelTime: "55",
+    capacity: 40,
+    pickupLocation: locationResponse[7]._id,
+    dropoffLocation: locationResponse[3]._id,
+    reservations: []
+  },
+  {
+    busNumber: 666,
+    collectionTime: new Date(2032, 7, 24, 12, 0),
+    estimatedTravelTime: "35",
+    capacity: 40,
+    pickupLocation: locationResponse[5]._id,
+    dropoffLocation: locationResponse[0]._id,
+    reservations: []
+  }
 ];
+
 
 const serviceResponce = await BusService.insertMany(services);
 console.log("Inserted Services");
