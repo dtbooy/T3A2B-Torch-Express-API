@@ -313,17 +313,11 @@ User stories are a fundamental component of agile software development methodolo
 
 
 # R13 	Trello Board Screenshots - Part B
-
 <img src="./docs/Images/Trello Screenshots/Screenshot 2024-02-19.png" alt="Trello Screenshot">
-
 <img src="./docs/Images/Trello Screenshots/Screenshot 2024-02-20.png" alt="Trello Screenshot">
-
 <img src="./docs/Images/Trello Screenshots/Screenshot 2024-02-21.png" alt="Trello Screenshot">
-
 <img src="./docs/Images/Trello Screenshots/Screenshot 2024-02-22.png" alt="Trello Screenshot">
-
 <img src="./docs/Images/Trello Screenshots/Screenshot 2024-02-23.png" alt="Trello Screenshot">
-
 <img src="./docs/Images/Trello Screenshots/Screenshot 2024-02-27.png" alt="Trello Screenshot">
-
 <img src="./docs/Images/Trello Screenshots/Screenshot 2024-02-29.png" alt="Trello Screenshot">
+<img src="./docs/Images/Trello Screenshots/Screenshot 2024-03-01.png" alt="Trello Screenshot">
