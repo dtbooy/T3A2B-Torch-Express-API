@@ -8,19 +8,24 @@
 ## Deployment credentials
 ### Admin
 email: admin@example.com
+
 password: admin1234
 
 ### User
 email: user@example.com
+
 password: 123456
 
 # R11 GitHub Repos
 [T3A2-A Repo](https://github.com/dtbooy/T3A2A)
+
 [T3A2-B Backend Repo](https://github.com/dtbooy/T3A2B-Torch-Express-API)
+
 [T3A2-B Frontend Repo](https://github.com/dtbooy/T3A2B-Torch-Express-Front-End)
 
 # Other Document links
 [Manual integration test document (Google doc)](https://docs.google.com/document/d/1-OH11vcpysQHJBcWNGXAWlOwStB04-EWAIszu_B7AHs/edit?usp=drive_link)
+
 [Our Trello Board](https://trello.com/b/eErgaOOb/t3a2-team-board)
 
 # Development Team 
@@ -337,3 +342,5 @@ User stories are a fundamental component of agile software development methodolo
 <img src="./docs/Images/Trello Screenshots/Screenshot 2024-02-27.png" alt="Trello Screenshot">
 
 <img src="./docs/Images/Trello Screenshots/Screenshot 2024-02-29.png" alt="Trello Screenshot">
+
+<img src="./docs/Images/Trello Screenshots/Screenshot 2024-03-01.png" alt="Trello Screenshot">
