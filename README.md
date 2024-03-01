@@ -63,15 +63,34 @@ Express.js is a web application framework which provides tools for creating and 
 React is a JavaScript library which provides a framework for building dynamic user interfaces with reusable components. 
 ### Node.js
 Node.js is a runtime environment which allows for the execution of JavaScript code on the server side
-### Mongoose
-Mongoose is an Object Data Modelling library for MongoDB and Node.js which provides a schema-based approach to modelling the data within the application. 
 
-### Third Party Applications / Libraries
+### Libraries 
+#### bcrypt
+Used for hashing passwords and comparing hashed passwords in Node.js.
+#### cors
+Used to enable Cross-Origin Resource Sharing (CORS).
+#### dotenv
+Used to load environment variables from a .env file into process.env.
+#### express
+Used as the web framework.
+#### jsonwebtoken
+Used for creating, decoding, and verifying JWTs.
+#### mongoose
+Used as the An Object Data Modeling (ODM) library for MongoDB operations.
+#### react
+Used for building the front end / user interfaces.
+#### bootstrap, react-bootstrap
+Used as the CSS / styling framework.
+#### js-cookies
+Used for handling cookies.
+#### jest
+Used as the Testing framework - Dev dependency only.
+#### supertest
+Used as the testing library used for testing requests to the API - Dev dependency only .
+#### Vitest and Testing-Library (@testing-library/jest-dom, @testing-library/react, @testing-library/user-event)
+Used as the testing library for the front end - Dev dependency only.
 
-- **express -jwt** - JWT is utilised for user authentication and authorisation purposes
-- **Bcrypt** - used to securely store users information (passwords) as a hash
-- **Vitest and Testing-Library**: testing framework and library used for front end testing 
-- **Jest and Supertest** - testing framework and library used for API unit testing
+### Third Party Applications
 - **MongoDB Atlas** - cloud database service used for Mongo NoSQL database deployment 
 - **Render** - cloud-based software used for backend deployment 
 - **Netlify** - platform that provides hosting and deployment services, used for front end deployment
