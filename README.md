@@ -2,7 +2,17 @@
 
 # R10 Deployment links
 [Production Website - https://torchexpress.netlify.app/](https://torchexpress.netlify.app/)
+
 [Deployed API - https://t3a2b-torch-express-api.onrender.com](https://t3a2b-torch-express-api.onrender.com)
+
+## Deployment credentials
+### Admin
+email: admin@example.com
+password: admin1234
+
+### User
+email: user@example.com
+password: 123456
 
 # R11 GitHub Repos
 [T3A2-A Repo](https://github.com/dtbooy/T3A2A)
