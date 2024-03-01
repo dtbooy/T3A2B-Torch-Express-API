@@ -2,12 +2,6 @@ import app from "../app.js";
 import request from "supertest";
 import bcrypt from "bcrypt";
 
-//   let user = await request(app).post("/login").send({
-//     email: "user@example.com",
-//     password: "123456",
-//   })
-//   userToken = res.body.token
-
 describe("User routes", () => {
   describe("Get /users with admin credentials", () => {
     let res;

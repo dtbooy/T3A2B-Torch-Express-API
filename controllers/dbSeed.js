@@ -33,9 +33,19 @@ const allLocations = [
     directions: "Stop 23 on Sherwood Rd, near High St at Toowong Village",
   },
   {
+    name: "Hamilton",
+    address: "Kingsford Smith Dr, Hamilton QLD 4007",
+    directions: "Drop off point at Kingsford Smith Dr",
+  },
+  {
+    name: "Queen Street",
+    address: "240 Queen St, Brisbane City QLD 4000",
+    directions: "Drop off point at 240 Queen"
+  },
+  {
     name: "The Gabba",
     address: "Vulture St, Woolloongabba QLD 4102",
-    directions: "Stop 23 on Sherwood Rd, near High St at Toowong Village",
+    directions: "Drop off point at 10-12 Logan Rd",
   },
   {
     name: "Suncorp Stadium",
@@ -44,8 +54,13 @@ const allLocations = [
   },
   {
     name: "Queensland Tennis Center",
-    address: "40 Castlemaine St, Milton QLD 4064",
-    directions: "Drop off point at 40 Castlemaine St",
+    address: "190 King Arthur Terrace, Tennyson QLD 4105",
+    directions: "Drop off point at 190 King Arthur Terrace",
+  },
+  {
+    name: "Brisbane Arena",
+    address: "1 Parkland Blvd, Brisbane City QLD 4000",
+    directions: "Drop off point at 1 Parkland Blvd",
   },
 ];
 // add locations to db
@@ -340,43 +355,43 @@ const serviceResponce = await BusService.insertMany(services);
 console.log("Inserted Services");
 
 const reservations = [
-    {
-        user : userResponse[0]._id,
-        busService : serviceResponce[0]._id
-    },
-    {
-        user : userResponse[0]._id,
-        busService : serviceResponce[9]._id
-    },
-    {
-        user : userResponse[1]._id,
-        busService : serviceResponce[11]._id
-    },
-    {
-        user : userResponse[2]._id,
-        busService : serviceResponce[11]._id
-    },
-    {
-        user : userResponse[2]._id,
-        busService : serviceResponce[10]._id
-    },
-    {
-        user : userResponse[0]._id,
-        busService : serviceResponce[12]._id
-    },
+  {
+    user: userResponse[0]._id,
+    busService: serviceResponce[0]._id
+  },
+  {
+    user: userResponse[0]._id,
+    busService: serviceResponce[9]._id
+  },
+  {
+    user: userResponse[1]._id,
+    busService: serviceResponce[11]._id
+  },
+  {
+    user: userResponse[2]._id,
+    busService: serviceResponce[11]._id
+  },
+  {
+    user: userResponse[2]._id,
+    busService: serviceResponce[10]._id
+  },
+  {
+    user: userResponse[0]._id,
+    busService: serviceResponce[12]._id
+  },
 ]
 const reservationsResponce = await Reservation.insertMany(reservations);
-for (const reservation of reservationsResponce){
-    await User.findOneAndUpdate(
-        // The query object
-        { _id: reservation.user }, 
-        // The data we want to append to the array property of the found document
-        { $push: { reservations: reservation._id } }  
-    ).exec();
-    await BusService.findOneAndUpdate(
-        { _id: reservation.busService }, 
-        { $push: { reservations: reservation._id } }
-    ).exec();
+for (const reservation of reservationsResponce) {
+  await User.findOneAndUpdate(
+    // The query object
+    { _id: reservation.user },
+    // The data we want to append to the array property of the found document
+    { $push: { reservations: reservation._id } }
+  ).exec();
+  await BusService.findOneAndUpdate(
+    { _id: reservation.busService },
+    { $push: { reservations: reservation._id } }
+  ).exec();
 }
 console.log("Inserted Reservations");
 
