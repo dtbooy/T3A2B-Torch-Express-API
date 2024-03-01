@@ -39,9 +39,9 @@ describe("Services routes", () => {
           __v: 0,
         },
         dropoffLocation: {
-          name: "Queensland Tennis Center",
-          address: "40 Castlemaine St, Milton QLD 4064",
-          directions: "Drop off point at 40 Castlemaine St",
+          name: "The Gabba",
+          address: "Vulture St, Woolloongabba QLD 4102",
+          directions: "Drop off point at 10-12 Logan Rd",
           __v: 0,
         },
         capacity: 40,
