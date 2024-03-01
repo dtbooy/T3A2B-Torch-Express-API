@@ -78,6 +78,10 @@ router.delete('/:id', verifyUser, async (req, res) => {
                 { _id: deletedReservation.busService }, // Filter by busService ID
                 { $pull: { reservations: deletedReservation._id } } // Remove reservation ID from the array
             )
+            await User.updateOne(
+                { _id: deletedReservation.user }, // Filter by User ID
+                { $pull: { reservations: deletedReservation._id } } // Remove reservation ID from the array
+            )
             res.status(204).send({ success: 'Reservation deleted' })
         } else {
             res.status(404).send({ error: 'Reservation not found' })

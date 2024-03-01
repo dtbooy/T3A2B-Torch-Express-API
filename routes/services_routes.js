@@ -22,11 +22,11 @@ servicesRoutes.get("/search", async (req, res) => {
   }
   filters.collectionTime = {
     $gte: date
-      ? new Date(Date.parse(date))
-      : new Date(Date.parse("2032/07/01")),
+      ? new Date(Date.parse(date) - 36000000) // add 10 hours for timezone
+      : new Date(Date.parse("2032/07/01") - 36000000),// add 10 hours for timezone
     $lt: date
-      ? new Date(Date.parse(date) + 86400000)
-      : new Date(Date.parse("2032/08/30")),
+      ? new Date(Date.parse(date) - 36000000 + 86400000)// add 10 hours for timezone + 24 hours for a full day
+      : new Date(Date.parse("2032/08/30") - 36000000),// add 10 hours for timezone
   };
   try {
     let services = await BusService.find(filters).lean();
